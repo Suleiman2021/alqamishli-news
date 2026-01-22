@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ news.title }} - slslkennews</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/base.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/layout.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/responsive.css') }}" />
+  <!-- داخل <head> -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+
+  <style>
+    /* ===== Animations ===== */
+    body {
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    /* ===== Article Page Styling ===== */
+    .article-page {
+      display: grid;
+      grid-template-columns: 3fr 1fr;
+      gap: 25px;
+      margin-top: 25px;
+      animation: slideUp 0.8s ease-in-out;
+    }
+
+    @keyframes slideUp {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .article-content {
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .article-content:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    .article-title {
+      font-size: 28px;
+      margin-bottom: 15px;
+      line-height: 1.6;
+      color: var(--dark);
+    }
+
+    .article-meta {
+      color: var(--gray);
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .article-image {
+      width: 100%;
+      max-height: 450px;
+      object-fit: cover;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+
+    .article-image:hover {
+      transform: scale(1.02);
+    }
+
+    .article-text {
+      line-height: 1.9;
+      font-size: 17px;
+      color: var(--dark);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      height: fit-content;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .sidebar:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+
+    .sidebar h3 {
+      margin-bottom: 15px;
+      border-bottom: 2px solid var(--green);
+      padding-bottom: 6px;
+      font-size: 20px;
+    }
+
+    .related-item {
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+
+    .related-item:hover {
+      color: var(--green);
+    }
+
+    .related-item:last-child {
+      border-bottom: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .article-page {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        margin-top: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="main-header">
+    <div class="container header-content">
+      <div class="logo">
+        <span class="g">s</span><span class="y">l</span><span class="r">s</span>lkennews
+      </div>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="{{ url_for('public.index') }}">الرئيسية</a>
+        <a href="{{ url_for('public.category', category='سياسة') }}">سياسة</a>
+        <a href="{{ url_for('public.category', category='رياضة') }}">رياضة</a>
+        <a href="{{ url_for('public.category', category='تقنية') }}">تقنية</a>
+        <a href="{{ url_for('public.category', category='اقتصاد') }}">اقتصاد</a>
+        <a href="{{ url_for('public.category', category='صحة') }}">صحة</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="icon-btn" href="{{ url_for('public.search') }}">🔍</a>
+        <a class="icon-btn" href="{{ url_for('bookmarks.bookmarks_page') }}">⭐</a>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+    </div>
+  </header>
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <!-- ===== Breaking News ===== -->
+  
+    <div class="breaking-news">
+      <div class="breaking-track">
+        {% for n in breaking_news %}
+          <span class="breaking-item">🛑 {{ n.content }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+  <!-- ===== Article Page ===== -->
+  <main class="container article-page">
+
+    <!-- Article Content -->
+    <article class="article-content">
+      <h1 class="article-title">
+        {{ news.title }}
+      </h1>
+
+
+      <div class="article-meta">
+        📅 {{ news.created_at.strftime('%Y-%m-%d') }} | 🏷️ {{ news.category }}
+      </div>
+
+
+      {% if news.image_url %}
+        <img class="article-image" src="{{ news.image_url }}" alt="{{ news.title }}">
+      {% endif %}
+
+
+      <div class="article-text">
+        {{ news.content | safe }}
+      </div>
+
+    </article>
+
+    <!-- Sidebar -->
+        
+    <aside class="sidebar">
+      <h3>أخبار ذات صلة</h3>
+
+      {% if related_news %}
+        {% for item in related_news %}
+          <a href="{{ url_for('public.news_detail', slug=item.slug) }}"
+            class="related-item">
+            {{ item.title }}
+          </a>
+        {% endfor %}
+      {% else %}
+        <div class="related-item">لا توجد أخبار ذات صلة</div>
+      {% endif %}
+    </aside>
+
+
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="main-footer">
+    <div class="container footer-content">
+      <div>© 2026 slslkennews - جميع الحقوق محفوظة</div>
+      <div class="footer-links">
+        <a href="{{ url_for('public.about') }}">من نحن</a>
+        <a href="{{ url_for('public.contact') }}">اتصل بنا</a>
+        <a href="#">سياسة الخصوصية</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  // Mobile menu toggle
+  const menuBtn = document.getElementById("menuBtn");
+  const nav = document.getElementById("mainNav");
+  menuBtn.onclick = () => nav.classList.toggle("show");
+
+const menuOverlay = document.getElementById('menuOverlay');
+
+menuBtn.onclick = () => {
+  nav.classList.toggle('show');
+  menuOverlay.classList.toggle('show');
+}
+
+// إغلاق القائمة عند الضغط على Overlay
+menuOverlay.onclick = () => {
+  nav.classList.remove('show');
+  menuOverlay.classList.remove('show');
+}
+
+// إغلاق عند الضغط على رابط
+const navLinks = document.querySelectorAll('.main-nav a');
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    nav.classList.remove('show');
+    menuOverlay.classList.remove('show');
+  });
+});
+
+</script>
+
+
+
+</body>
+</html>

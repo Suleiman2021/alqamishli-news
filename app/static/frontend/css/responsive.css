@@ -1,0 +1,193 @@
+/* Tablet */
+@media (max-width: 900px) {
+  .featured-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .featured-card.big {
+    grid-column: span 2;
+    height: 250px;
+  }
+
+  .news-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+/* ===== Mobile Menu Styling ===== */
+.main-nav {
+  display: flex;
+  gap: 15px;
+}
+
+.main-nav.show {
+  display: flex;
+}
+
+/* ===== Mobile Menu Styling ===== */
+@media (max-width: 900px) {
+
+  .main-nav {
+    display: none;
+    position: fixed;      /* لتغطي فوق المحتوى */
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 75%;           /* تغطي 75% من يمين الشاشة */
+    flex-direction: column;
+    background: #ffffff;     /* خلفية صلبة */
+    padding: 60px 20px;
+    box-shadow: -3px 0 15px rgba(0, 0, 0, 0.521);
+    transform: translateX(100%); /* مخفية في البداية */
+    transition: transform 0.3s ease;
+    z-index: 200;         /* فوق جميع العناصر */
+  }
+
+  /* عند فتح القائمة */
+  .main-nav.show {
+    transform: translateX(0);
+  }
+
+  /* روابط القائمة */
+  .main-nav a {
+    padding: 15px 10px;
+    font-size: 18px;
+    border-bottom: 1px solid #eee;
+    color: var(--dark);
+    font-weight: bold;
+    transition: background 0.3s, color 0.3s, padding-left 0.3s;
+  }
+
+  /* Hover effect */
+  .main-nav a:hover {
+    background: var(--green);
+    color: #fff;
+    border-radius: 6px;
+    padding-left: 15px;
+  }
+
+  /* زر القائمة */
+  .menu-btn {
+    display: block;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    background: none;
+    border: none;
+  }
+
+  .menu-btn:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Overlay خلف القائمة */
+  .menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 25%;          /* باقي الشاشة */
+    height: 100%;
+    background: rgba(0, 0, 0, 0.233);
+    z-index: 150;
+    display: none;
+  }
+
+  .menu-overlay.show {
+    display: block;
+  }
+}
+
+
+
+/* Mobile */
+@media (max-width: 600px) {
+
+  .main-nav {
+    display: none;
+    position: fixed;      /* لتغطي فوق المحتوى */
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 75%;           /* تغطي 75% من يمين الشاشة */
+    flex-direction: column;
+    background: #ffffff;     /* خلفية صلبة */
+    padding: 30px 20px;
+    box-shadow: -3px 0 15px rgba(0, 0, 0, 0.521);
+    transform: translateX(100%); /* مخفية في البداية */
+    transition: transform 0.3s ease;
+    z-index: 200;         /* فوق جميع العناصر */
+  }
+
+  /* عند فتح القائمة */
+  .main-nav.show {
+    transform: translateX(0);
+  }
+
+  /* روابط القائمة */
+  .main-nav a {
+    padding: 15px 10px;
+    font-size: 18px;
+    border-bottom: 1px solid #eee;
+    color: var(--dark);
+    font-weight: bold;
+    transition: background 0.3s, color 0.3s, padding-left 0.3s;
+  }
+
+  /* Hover effect */
+  .main-nav a:hover {
+    background: var(--green);
+    color: #fff;
+    border-radius: 6px;
+    padding-left: 15px;
+  }
+
+  /* زر القائمة */
+  .menu-btn {
+    display: block;
+    font-size: 24px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    background: none;
+    border: none;
+  }
+
+  .menu-btn:hover {
+    transform: scale(1.1);
+  }
+  
+  /* Overlay خلف القائمة */
+  .menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 25%;          /* باقي الشاشة */
+    height: 100%;
+    background: rgba(0, 0, 0, 0.301);
+    z-index: 150;
+    display: none;
+  }
+
+  .menu-overlay.show {
+    display: block;
+  }
+
+  .featured-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .featured-card.big {
+    grid-column: span 1;
+    height: 220px;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+}

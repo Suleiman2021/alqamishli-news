@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>رسائل العملاء</title>
+
+  <style>
+    body {
+      font-family: Tahoma, Arial;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      padding: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #1fa84f;
+      color: white;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: center;
+    }
+
+    tr {
+      border-bottom: 1px solid #eee;
+    }
+
+    tr.unread {
+      background: #fff4dd;
+      font-weight: bold;
+    }
+
+    /* tr:hover {
+      background: #f9fafb;
+    } */
+
+    .badge-new {
+      background: #ff9800;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .badge-read {
+      background: #4caf50;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 14px;
+      display: inline-block;
+    }
+
+    .btn-reply {
+      background: #2196f3;
+      color: #fff;
+    }
+
+    .btn-reply:hover {
+      opacity: 0.8;
+    }
+
+    .msg-preview {
+      max-width: 400px;
+      text-align: right;
+      margin: auto;
+      color: #333;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .counter {
+      background: #e53935;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="top-bar">
+    <h2>📬 رسائل العملاء</h2>
+    <div class="counter">
+      🆕 {{ messages | selectattr("is_read", "equalto", False) | list | length }} جديد
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>الاسم</th>
+        <th>البريد</th>
+        <th>الرسالة</th>
+        <th>التاريخ</th>
+        <th>الحالة</th>
+        <th>رد</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for m in messages %}
+      <tr class="{% if not m.is_read %}unread{% endif %}">
+        <td>{{ m.id }}</td>
+        <td>{{ m.name }}</td>
+        <td>{{ m.email }}</td>
+        <td class="msg-preview">
+          {{ m.message[:120] }}{% if m.message|length > 120 %}...{% endif %}
+        </td>
+        <td>{{ m.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+        <td>
+          {% if m.is_read %}
+            <span class="badge-read">مقروء</span>
+          {% else %}
+            <span class="badge-new">جديد</span>
+          {% endif %}
+        </td>
+        <td>
+          <a class="btn btn-reply" href="{{ url_for('admin.reply_message', id=m.id) }}">
+            ✉️ رد
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+
+  </table>
+
+</div>
+
+</body>
+</html>

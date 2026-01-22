@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تصنيف الأخبار - slslkennews</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/base.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/layout.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/responsive.css') }}" />
+
+
+  <style>
+    /* ===== Animations ===== */
+    body {
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .category-page {
+      margin-top: 25px;
+      animation: slideUp 0.8s ease-in-out;
+    }
+
+    @keyframes slideUp {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .category-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 25px;
+      color: var(--dark);
+    }
+
+    /* ===== News Grid ===== */
+    .news-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .news-card {
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      border: 1px solid #eee;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    }
+
+    .news-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+
+    .news-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+
+    .news-card img:hover {
+      transform: scale(1.05);
+    }
+
+    .news-card-content {
+      padding: 12px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .news-card-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 5px;
+      line-height: 1.4;
+      transition: color 0.3s;
+    }
+
+    .news-card-title:hover {
+      color: var(--green);
+    }
+
+    .news-card-meta {
+      font-size: 13px;
+      color: var(--gray);
+    }
+
+    /* ===== Pagination ===== */
+    .pagination {
+      margin: 25px 0;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .pagination a {
+      padding: 8px 14px;
+      background: var(--green);
+      color: #fff;
+      border-radius: 6px;
+      font-weight: bold;
+      transition: all 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .pagination a:hover {
+      background: var(--yellow);
+      color: var(--dark);
+      transform: scale(1.1);
+    }
+
+    .pagination a.active {
+      background: var(--red);
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px) {
+      .news-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .news-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="main-header">
+    <div class="container header-content">
+      <div class="logo">
+        <span class="g">s</span><span class="y">l</span><span class="r">s</span>lkennews
+      </div>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="{{ url_for('public.index') }}">الرئيسية</a>
+        <a href="{{ url_for('public.category', category='سياسة') }}">سياسة</a>
+        <a href="{{ url_for('public.category', category='رياضة') }}">رياضة</a>
+        <a href="{{ url_for('public.category', category='تقنية') }}">تقنية</a>
+        <a href="{{ url_for('public.category', category='اقتصاد') }}">اقتصاد</a>
+        <a href="{{ url_for('public.category', category='صحة') }}">صحة</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="icon-btn" href="{{ url_for('public.search') }}">🔍</a>
+        <a class="icon-btn" href="{{ url_for('bookmarks.bookmarks_page') }}">⭐</a>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+    </div>
+  </header>
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <!-- ===== Breaking News ===== -->
+  
+    <div class="breaking-news">
+      <div class="breaking-track">
+        {% for n in breaking_news %}
+          <span class="breaking-item">🛑 {{ n.content }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+  <!-- ===== Main Category Page ===== -->
+  <main class="container category-page">
+    <h1 class="category-title">تصنيف: {{ category }}</h1>
+
+    <div class="news-grid">
+      {% for news in news_list %}
+        <div class="news-card" >
+          <a href="{{ url_for('public.news_detail', slug=news.slug) }}">
+          <img src="{{ news.image_url }}" alt="{{ news.title }}">
+          <div class="news-card-content">
+            <div class="news-card-title">{{ news.title }}</div>
+            <div class="news-card-meta">📅 {{ news.created_at.strftime('%Y-%m-%d') }} | 🏷️ {{ news.category }}</div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <a href="#" class="active">1</a>
+      <a href="#">2</a>
+      <a href="#">3</a>
+      <a href="#">4</a>
+    </div>
+
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="main-footer">
+    <div class="container footer-content">
+      <div>© 2026 slslkennews - جميع الحقوق محفوظة</div>
+      <div class="footer-links">
+        <a href="{{ url_for('public.about') }}">من نحن</a>
+        <a href="{{ url_for('public.contact') }}">اتصل بنا</a>
+        <a href="#">سياسة الخصوصية</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  const menuBtn = document.getElementById("menuBtn");
+  const nav = document.getElementById("mainNav");
+  menuBtn.onclick = () => nav.classList.toggle("show");
+
+
+  const menuOverlay = document.getElementById('menuOverlay');
+
+menuBtn.onclick = () => {
+  nav.classList.toggle('show');
+  menuOverlay.classList.toggle('show');
+}
+
+// إغلاق القائمة عند الضغط على Overlay
+menuOverlay.onclick = () => {
+  nav.classList.remove('show');
+  menuOverlay.classList.remove('show');
+}
+
+// إغلاق عند الضغط على رابط
+const navLinks = document.querySelectorAll('.main-nav a');
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    nav.classList.remove('show');
+    menuOverlay.classList.remove('show');
+  });
+});
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+

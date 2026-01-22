@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>اتصل بنا - slslkennews</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/base.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/layout.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/responsive.css') }}" />
+
+
+  <style>
+    /* ===== Animations ===== */
+    body {
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .contact-page {
+      margin-top: 25px;
+      background: #fff;
+      padding: 25px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+      animation: slideUp 0.6s ease forwards;
+    }
+
+    @keyframes slideUp {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    .contact-page h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: var(--dark);
+    }
+
+    /* ===== Form ===== */
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      width: 100%;
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 8px rgba(31,168,79,0.3);
+      outline: none;
+    }
+
+    .contact-form button {
+      padding: 12px 24px;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 180px;
+      align-self: flex-start;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    .contact-form button:hover {
+      background: var(--yellow);
+      color: var(--dark);
+      transform: scale(1.05);
+    }
+
+    /* ===== Header Buttons Hover ===== */
+    .icon-btn:hover,
+    .menu-btn:hover {
+      transform: scale(1.1);
+      transition: transform 0.2s;
+    }
+
+
+
+
+    /* ===== Responsive ===== */
+    @media (max-width: 600px) {
+      .contact-form button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="main-header">
+    <div class="container header-content">
+      <div class="logo">
+        <span class="g">s</span><span class="y">l</span><span class="r">s</span>lkennews
+      </div>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="{{ url_for('public.index') }}">الرئيسية</a>
+        <a href="{{ url_for('public.category', category='سياسة') }}">سياسة</a>
+        <a href="{{ url_for('public.category', category='رياضة') }}">رياضة</a>
+        <a href="{{ url_for('public.category', category='تقنية') }}">تقنية</a>
+        <a href="{{ url_for('public.category', category='اقتصاد') }}">اقتصاد</a>
+        <a href="{{ url_for('public.category', category='صحة') }}">صحة</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="icon-btn" href="{{ url_for('public.search') }}">🔍</a>
+        <a class="icon-btn" href="{{ url_for('bookmarks.bookmarks_page') }}">⭐</a>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <!-- ===== Breaking News ===== -->
+  
+    <div class="breaking-news">
+      <div class="breaking-track">
+        {% for n in breaking_news %}
+          <span class="breaking-item">🛑 {{ n.content }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+  
+
+  <!-- ===== Main ===== -->
+  <main class="container contact-page">
+    <h1>اتصل بنا</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, msg in messages %}
+        <div class="alert {{ category }}">{{ msg }}</div>
+      {% endfor %}
+    {% endwith %}
+    <form class="contact-form" method="POST" action="{{ url_for('public.contact') }}">
+      <input type="text" name="name" placeholder="الاسم" required>
+      <input type="email" name="email" placeholder="البريد الإلكتروني" required>
+      <textarea name="message" placeholder="رسالتك" required></textarea>
+      <button type="submit">إرسال</button>
+    </form>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="main-footer">
+    <div class="container footer-content">
+      <div>© 2026 slslkennews - جميع الحقوق محفوظة</div>
+      <div class="footer-links">
+        <a href="{{ url_for('public.about') }}">من نحن</a>
+        <a href="{{ url_for('public.contact') }}">اتصل بنا</a>
+        <a href="#">سياسة الخصوصية</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  // Mobile menu
+  const menuBtn = document.getElementById("menuBtn");
+  const nav = document.getElementById("mainNav");
+  menuBtn.onclick = () => nav.classList.toggle("show");
+
+  
+  const menuOverlay = document.getElementById('menuOverlay');
+
+menuBtn.onclick = () => {
+  nav.classList.toggle('show');
+  menuOverlay.classList.toggle('show');
+}
+
+// إغلاق القائمة عند الضغط على Overlay
+menuOverlay.onclick = () => {
+  nav.classList.remove('show');
+  menuOverlay.classList.remove('show');
+}
+
+// إغلاق عند الضغط على رابط
+const navLinks = document.querySelectorAll('.main-nav a');
+navLinks.forEach(link => {
+  link.addEventListener('click', () => {
+    nav.classList.remove('show');
+    menuOverlay.classList.remove('show');
+  });
+});
+
+</script>
+
+</body>
+</html>

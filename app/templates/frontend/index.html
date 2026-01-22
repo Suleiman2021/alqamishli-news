@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>slslkennews</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ربط CSS من مجلد static -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/base.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/layout.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/responsive.css') }}" />
+  <link rel="manifest" href="{{ url_for('static', filename='frontend/news/manifest.json') }}">
+  <meta name="theme-color" content="#1fa84f">
+
+
+  <style>
+    /* ===== Animations ===== */
+    body {
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    /* ===== Hover Effects ===== */
+    .main-nav a:hover {
+      color: var(--green);
+      transition: color 0.3s;
+    }
+
+    .icon-btn:hover,
+    .menu-btn:hover {
+      color: var(--yellow);
+      transform: scale(1.2);
+      transition: all 0.3s;
+    }
+
+    .news-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .featured-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+      margin: 20px 0 15px;
+      font-size: 24px;
+      color: var(--dark);
+    }
+
+    .featured {
+      margin-bottom: 30px;
+    }
+
+    .featured-card {
+      color: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--green), var(--yellow));
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .featured-card.big { height: 400px; }
+    .featured-card:not(.big) { height: 200px; }
+
+    .featured-card {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.featured-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  text-decoration: none;
+  color: #fff;
+}
+
+.featured-info {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(to top, rgb(0, 0, 0), rgba(0, 0, 0, 0.171));
+  margin-left: 0;
+}
+
+.featured-info h3 {
+  margin: 5px 0;
+  font-size: 18px;
+}
+.featured-category {
+  position: absolute;   /* اجعلها مطلقة داخل الكرت */
+  bottom: 10px;         /* أسفل الكرت */
+  left: 15px;           /* من الجهة اليسرى */
+  font-size: 13px;
+  opacity: 0.85;
+  background: rgba(0,0,0,0.5); /* ظل خفيف خلف النص */
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+
+.featured-date {
+  font-size: 13px;
+  opacity: 0.85;
+}
+
+
+    .news-card-title {
+      color: var(--dark);
+      transition: color 0.3s;
+    }
+
+    .news-card-title:hover {
+      color: var(--green);
+    }
+
+    .main-footer {
+      background: #222;
+      color: #fff;
+      margin-top: 40px;
+      border-top: 3px solid var(--green);
+    }
+
+    .footer-links a {
+      margin-left: 15px;
+      color: #fff;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: var(--yellow);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Header ===== -->
+  <header class="main-header">
+    <div class="container header-content">
+      <div class="logo">
+        <span class="g">s</span><span class="y">l</span><span class="r">s</span>lkennews
+      </div>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="{{ url_for('public.index') }}">الرئيسية</a>
+        <a href="{{ url_for('public.category', category='سياسة') }}">سياسة</a>
+        <a href="{{ url_for('public.category', category='رياضة') }}">رياضة</a>
+        <a href="{{ url_for('public.category', category='تقنية') }}">تقنية</a>
+        <a href="{{ url_for('public.category', category='اقتصاد') }}">اقتصاد</a>
+        <a href="{{ url_for('public.category', category='صحة') }}">صحة</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="icon-btn" href="{{ url_for('public.search') }}">🔍</a>
+        <a class="icon-btn" href="{{ url_for('bookmarks.bookmarks_page') }}">⭐</a>
+        <button class="menu-btn" id="menuBtn">☰</button>
+      </div>
+    </div>
+  </header>
+  <div class="menu-overlay" id="menuOverlay"></div>
+
+  <!-- ===== Breaking News ===== -->
+  
+    <div class="breaking-news">
+      <div class="breaking-track">
+        {% for n in breaking_news %}
+          <span class="breaking-item">🛑 {{ n.content }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+  <!-- ===== Main Content ===== -->
+  <main class="container">
+
+    <!-- Featured -->
+    <section class="featured">
+      <h2>أخبار مميزة</h2>
+      <div class="featured-grid">
+        {% for news in featured_news %}
+        {% set image_src = news.image_url if news.image_url else (url_for('static', filename='uploads/' ~ news.image_file) if news.image_file else '') %}
+          <div class="featured-card {% if loop.first %}big{% endif %}"
+            style="background-image: url('{{ image_src }}');">
+          <a href="{{ url_for('public.news_detail', slug=news.slug) }}" class="featured-overlay">
+            <div class="featured-info">
+              <div class="featured-category">🏷 {{ news.category }}</div>
+              <h3>{{ news.title }}</h3>
+              <div class="featured-date">📅 {{ news.created_at.strftime('%Y-%m-%d') }}</div>
+            </div>
+          </a>
+        </div>
+
+        {% endfor %}
+        {% if not featured_news %}
+          <div class="featured-card big">لا توجد أخبار مميزة حالياً</div>
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- Latest -->
+    <section class="latest">
+      <h2>آخر الأخبار</h2>
+      <div class="news-grid">
+        {% if news_list %}
+          {% for news in news_list %}
+            <div class="news-card">
+              <a href="{{ url_for('bookmarks.add_bookmark', news_id=news.id) }}">⭐</a>
+              <a href="{{ url_for('public.news_detail', slug=news.slug) }}">
+                {% if news.image_url or news.image_file %}
+                <img
+                  src="{% if news.image_url %}{{ news.image_url }}{% elif news.image_file %}{{ url_for('static', filename='uploads/' ~ news.image_file) }}{% endif %}"
+                  alt="{{ news.title }}"
+                >
+                {% endif %}
+
+                <div class="news-card-content">
+                  <div class="news-card-title">{{ news.title }}</div>
+                  <div class="news-card-meta">📅 {{ news.created_at.strftime('%Y-%m-%d') }} | 🏷️ {{ news.category }}</div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        {% else %}
+          <p>لا توجد أخبار حالياً.</p>
+        {% endif %}
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="main-footer">
+    <div class="container footer-content">
+      <div>© 2026 slslkennews - جميع الحقوق محفوظة</div>
+      <div class="footer-links">
+        <a href="{{ url_for('public.about') }}">من نحن</a>
+        <a href="{{ url_for('public.contact') }}">اتصل بنا</a>
+        <a href="#">سياسة الخصوصية</a>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  // Mobile menu
+  const menuBtn = document.getElementById("menuBtn");
+  const nav = document.getElementById("mainNav");
+  const menuOverlay = document.getElementById('menuOverlay');
+
+  menuBtn.onclick = () => {
+    nav.classList.toggle('show');
+    menuOverlay.classList.toggle('show');
+  }
+
+  menuOverlay.onclick = () => {
+    nav.classList.remove('show');
+    menuOverlay.classList.remove('show');
+  }
+
+  const navLinks = document.querySelectorAll('.main-nav a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      nav.classList.remove('show');
+      menuOverlay.classList.remove('show');
+    });
+  });
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register(
+    "{{ url_for('static', filename='frontend/news/sw.js') }}"
+  );
+}
+</script>
+
+
+</body>
+</html>

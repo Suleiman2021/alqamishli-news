@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>الإعدادات - تغيير كلمة المرور</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/layout.css">
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    .settings-page {
+      max-width: 500px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      border: 1px solid #eee;
+      animation: fadeIn .4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .settings-page h1 {
+      margin-bottom: 20px;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    .logout-btn {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 12px;
+      background: #c0392b;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: #a93226;
+      transform: translateY(-1px);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    .form-group input:focus {
+      border-color: var(--green);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0, 150, 0, 0.1);
+    }
+
+    .save-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--green);
+      color: #2b2e35;
+      font-weight: 900;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .save-btn:hover {
+      background: #0a7f0a;
+      color: #fff;
+      font-weight: 900;
+      transform: translateY(-1px);
+    }
+
+    .msg {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .msg.error { color: red; }
+    .msg.success { color: green; }
+  </style>
+</head>
+<body>
+
+  <main>
+    <div class="settings-page">
+      <h1>🔒 تغيير كلمة مرور الأدمن</h1>
+
+      <!-- زر تسجيل الخروج -->
+      <form method="POST" action="{{ url_for('admin.logout') }}">
+        <button type="submit" class="logout-btn">🚪 تسجيل الخروج</button>
+      </form>
+
+      <!-- رسائل Flask -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+          <div class="msg {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endwith %}
+
+      <!-- نموذج تغيير كلمة المرور -->
+      <form method="POST">
+        <div class="form-group">
+          <label>كلمة المرور الحالية</label>
+          <input type="password" name="old_password" required>
+        </div>
+
+        <div class="form-group">
+          <label>كلمة المرور الجديدة</label>
+          <input type="password" name="new_password" required>
+        </div>
+
+        <div class="form-group">
+          <label>تأكيد كلمة المرور الجديدة</label>
+          <input type="password" name="confirm_password" required>
+        </div>
+
+        <button class="save-btn" type="submit">💾 حفظ التغييرات</button>
+      </form>
+    </div>
+  </main>
+
+</body>
+</html>

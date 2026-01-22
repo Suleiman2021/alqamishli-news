@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>إضافة / تعديل خبر - Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="{{ url_for('static', filename='tinymce/tinymce.min.js') }}"></script>
+
+<!-- داخل <head> -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --green: #1fa84f;
+      --red: #e53935;
+      --yellow: #fbc02d;
+      --dark: #222;
+      --gray: #777;
+      --bg: #f4f6f8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Tahoma, Arial, sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      overflow-x: hidden;
+      background: var(--bg);
+    }
+
+    /* ===== Layout ===== */
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 15px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      animation: fadeUp 0.5s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: var(--dark);
+    }
+
+    /* ===== Form ===== */
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--green);
+      box-shadow: 0 0 0 2px rgba(31,168,79,0.1);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .editor-toolbar {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.editor-toolbar button {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  background: #f3f3f3;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.editor-toolbar button:hover {
+  background: var(--green);
+  color: #fff;
+}
+
+.editor-box {
+  min-height: 200px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.editor-box:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 2px rgba(31,168,79,0.1);
+}
+
+.featured-toggle {
+  margin-top: 15px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+  gap: 10px;
+}
+
+.checkbox-label input {
+  display: none;
+}
+
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--green);
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.checkbox-label input:checked + .custom-checkbox {
+  background-color: var(--green);
+}
+
+.checkbox-label input:checked + .custom-checkbox::after {
+  content: "✔";
+  color: white;
+  position: absolute;
+  font-size: 14px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.help-text {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #777;
+}
+
+
+    /* ===== Image Preview ===== */
+    .image-preview {
+      margin-top: 10px;
+      max-width: 100%;
+      border-radius: 8px;
+      display: none;
+    }
+
+    /* ===== Buttons ===== */
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 18px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    .btn-save {
+      background: var(--green);
+      color: #fff;
+    }
+
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(31,168,79,0.3);
+    }
+
+    .btn-cancel {
+      background: #eee;
+    }
+
+    .btn-cancel:hover {
+      background: #ddd;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 600px) {
+      .container {
+        margin: 15px auto;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="card">
+
+      <h1>📝 إضافة / تعديل خبر</h1>
+
+  <form id="newsForm" method="POST" enctype="multipart/form-data">
+  <div class="form-group">
+    <label>عنوان الخبر</label>
+    <input type="text" name="title" value="{{ news.title if news else '' }}" required>
+  </div>
+
+  <div class="form-group">
+    <label>Slug (رابط الخبر)</label>
+    <input type="text" name="slug" value="{{ news.slug if news else '' }}" placeholder="example-news-title">
+  </div>
+
+  <div class="form-group">
+    <label>Meta Description (وصف لمحركات البحث)</label>
+    <textarea name="meta_description" maxlength="160" placeholder="وصف مختصر يظهر في Google...">{{ news.meta_description if news else '' }}</textarea>
+  </div>
+
+  <div class="form-group">
+    <label>التصنيف</label>
+    <select name="category" required>
+      <option value="">-- اختر التصنيف --</option>
+      {% for cat in ['سياسة','رياضة','تقنية','اقتصاد','صحة'] %}
+        <option value="{{ cat }}" {% if news and news.category == cat %}selected{% endif %}>{{ cat }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="form-group featured-toggle">
+  <label class="checkbox-label">
+    <input type="checkbox" name="is_featured"
+           {% if news and news.is_featured %}checked{% endif %}>
+    <span class="custom-checkbox"></span>
+    خبر مميز ⭐
+  </label>
+  <small class="help-text">
+    عند التفعيل سيظهر الخبر في قسم الأخبار المميزة بالواجهة الرئيسية
+  </small>
+</div>
+
+
+  <div class="form-group">
+  <label>رابط صورة الخبر</label>
+  <input type="url"
+       name="image_url"
+       value="{{ news.image_url if news else '' }}"
+       placeholder="https://example.com/image.jpg"
+       maxlength="255"
+       pattern="https?://.*">
+
+  </div>
+
+  <small class="help-text">
+  في حال ترك رابط الصورة فارغًا يمكنك رفع صورة مباشرة
+</small>
+
+
+  <div class="form-group">
+  <label>أو رفع صورة من الجهاز</label>
+  <input type="file"
+         name="image_file"
+         id="imageInput"
+         accept="image/*">
+
+  <img id="imagePreview" class="image-preview">
+</div>
+
+
+
+  <div class="form-group">
+    <label>نص الخبر</label>
+    <textarea id="content" name="content">
+      {{ news.content if news else '' }}
+    </textarea>
+
+  </div>
+
+  <div class="actions">
+    <button type="submit" class="btn btn-save">💾 حفظ الخبر</button>
+    <button type="button" class="btn btn-cancel" onclick="history.back()">إلغاء</button>
+  </div>
+</form>
+
+
+    </div>
+  </div>
+
+<script>
+  const imageInput = document.getElementById("imageInput");
+  const imagePreview = document.getElementById("imagePreview");
+
+  imageInput.addEventListener("change", function(){
+    const file = this.files[0];
+    if(file){
+      const reader = new FileReader();
+      reader.onload = e => {
+        imagePreview.src = e.target.result;
+        imagePreview.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+ 
+</script>
+
+<!-- ------------- Rich Text Editor --------------- -->
+<script>
+tinymce.init({
+  selector: '#content',
+  language: 'ar',
+  directionality: 'rtl',
+  height: 400,
+  images_upload_url: "{{ url_for('admin.upload_image') }}",
+  automatic_uploads: true,
+  images_reuse_filename: true,
+  image_advtab: true,
+  object_resizing: true,
+
+ 
+
+
+  plugins: [
+    'advlist autolink lists link image charmap preview anchor',
+    'searchreplace visualblocks code fullscreen',
+    'insertdatetime media table code help wordcount',
+    'image imagetools'
+  ],
+
+  toolbar:
+    'undo redo | fontfamily fontsize | bold italic underline | ' +
+    'alignright aligncenter alignleft | ' +
+    'bullist numlist outdent indent | ' +
+    'link image media | code fullscreen',
+
+  font_family_formats:
+    'Cairo=Cairo; Tajawal=Tajawal; Amiri=Amiri; Arial=arial;',
+
+  content_style: `
+    body {
+      font-family: Cairo, Tajawal, Arial, sans-serif;
+      font-size: 18px;
+      line-height: 1.9;
+    }
+  `,
+
+  menubar: false
+});
+</script>
+
+
+
+
+
+
+</body>
+</html>

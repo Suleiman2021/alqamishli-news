@@ -1,0 +1,238 @@
+/* ===== Header ===== */
+.main-header {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.logo .g { color: var(--green); }
+.logo .r { color: var(--red); }
+.logo .y { color: var(--yellow); }
+
+.main-nav {
+  display: flex;
+  gap: 15px;
+}
+
+.main-nav a {
+  padding: 5px 8px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.icon-btn, .menu-btn {
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.menu-btn {
+  display: none;
+}
+
+/* ===== Breaking ===== */
+.breaking-news {
+  background: var(--red);
+  color: #fff;
+  padding: 8px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* ===== Featured ===== */
+.featured-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 10px;
+}
+
+.featured-card {
+  background: #ddd;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.featured-card.big {
+  height: 410px;
+}
+
+/* ===== News Grid ===== */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.news-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.news-card:hover {
+  transform: translateY(-3px);
+}
+
+.news-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.news-card-content {
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.news-card-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  line-height: 1.4;
+}
+
+.news-card-meta {
+  font-size: 13px;
+  color: var(--gray);
+}
+
+
+/* ===== Footer ===== */
+.main-footer {
+  background: #222;
+  color: #fff;
+  margin-top: 70rem;
+  border-top: 3px solid var(--green);
+  
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.footer-links a {
+  margin-left: 15px;
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover {
+  color: var(--yellow);
+}
+
+
+
+
+
+/* ===== Hover Effects ===== */
+    .main-nav a:hover {
+      color: var(--green);
+      transition: color 0.3s;
+    }
+
+    .icon-btn:hover,
+    .menu-btn:hover {
+      color: var(--yellow);
+      transform: scale(1.2);
+      transition: all 0.3s;
+    }
+
+    .news-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .featured-card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    h2 {
+      margin: 20px 0 15px;
+      font-size: 24px;
+      color: var(--dark);
+    }
+
+
+
+
+/* -------------------- breaking-news ------------------------ */
+
+    .breaking-news {
+        background: #c62828; /* أحمر تلفزيوني */
+        color: #fff;
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 10px 0;
+        position: relative;
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      /* المسار المتحرك */
+      .breaking-track {
+        display: inline-flex;
+        align-items: center;
+        animation: breakingMove 25s linear infinite;
+      }
+
+      /* كل خبر */
+      .breaking-item {
+        display: inline-flex;
+        align-items: center;
+        padding: 0 40px; /* 👈 المسافة بين الأخبار */
+        position: relative;
+      }
+
+      /* فاصل بصري بين الأخبار */
+      .breaking-item::after {
+        content: "|";
+        position: absolute;
+        right: 0;
+        color: rgba(255,255,255,0.6);
+      }
+
+      /* الحركة من اليسار إلى اليمين */
+      @keyframes breakingMove {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+        
+
+          

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>إدارة الأخبار العاجلة</title>
+
+<style>
+body {
+  font-family: Tahoma;
+  background: #f5f7fa;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+}
+
+h2 {
+  margin-bottom: 15px;
+}
+
+.card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+  margin-bottom: 20px;
+}
+
+textarea {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+}
+
+button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-save {
+  background: #2ecc71;
+  color: #fff;
+}
+
+.btn-delete {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.btn-toggle {
+  background: #3498db;
+  color: #fff;
+}
+
+.btn-off {
+  background: #95a5a6;
+  color: #fff;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th {
+  background: #2c3e50;
+  color: #fff;
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #eee;
+}
+
+.badge-active {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.badge-inactive {
+  color: #c0392b;
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h2>🛑 إدارة الأخبار العاجلة</h2>
+
+<div class="card">
+  <form method="POST">
+    <textarea name="content" rows="3" placeholder="اكتب الخبر العاجل هنا..." required></textarea>
+    <br><br>
+    <button class="btn-save" type="submit">💾 حفظ الخبر</button>
+  </form>
+</div>
+
+<div class="card">
+<h3>📜 سجل الأخبار</h3>
+
+<table>
+  <tr>
+    <th>النص</th>
+    <th>التاريخ</th>
+    <th>الحالة</th>
+    <th>تحكم</th>
+    <th>حذف</th>
+  </tr>
+
+{% for n in breaking_list %}
+<tr>
+  <td style="text-align:right">{{ n.content }}</td>
+  <td>{{ n.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+
+  <td>
+    {% if n.is_active %}
+      <span class="badge-active">✅ مفعل</span>
+    {% else %}
+      <span class="badge-inactive">❌ متوقف</span>
+    {% endif %}
+  </td>
+
+  <td>
+    <form method="POST" action="{{ url_for('admin.toggle_breaking_news', id=n.id) }}">
+      {% if n.is_active %}
+        <button class="btn-off">إيقاف</button>
+      {% else %}
+        <button class="btn-toggle">تفعيل</button>
+      {% endif %}
+    </form>
+  </td>
+
+  <td>
+    <form method="POST" action="{{ url_for('admin.delete_breaking_news', id=n.id) }}">
+      <button class="btn-delete">🗑 حذف</button>
+    </form>
+  </td>
+</tr>
+{% endfor %}
+
+</table>
+</div>
+
+</div>
+</body>
+</html>

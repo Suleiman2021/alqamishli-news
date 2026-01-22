@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>تسجيل دخول الأدمن - slslkennews</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <link rel="stylesheet" href="../css/base.css">
+  
+
+  <link rel="manifest" href="{{ url_for('static', filename='admin/manifest.json') }}">  
+  <meta name="robots" content="noindex, nofollow">
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    }
+
+    .login-box {
+      width: 360px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      animation: fadeIn .5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-box h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 22px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    .form-group input:focus {
+      border-color: var(--green);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0,150,0,.15);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--green);
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #2b2e35;
+      font-weight: 900;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.1);
+      color: #019b01;
+      font-weight: 900;
+    }
+
+    .msg {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .error { color: red; }
+    .success { color: green; }
+  </style>
+</head>
+<body>
+
+  <div class="login-box">
+    <h1>🔐 تسجيل دخول الأدمن</h1>
+
+    <!-- رسائل Flask -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="msg {{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('admin.login') }}">
+      <div class="form-group">
+        <label>اسم المستخدم</label>
+        <input type="text" name="username" required>
+      </div>
+
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" name="password" required>
+      </div>
+
+      <button class="login-btn" type="submit">تسجيل الدخول</button>
+    </form>
+  </div>
+
+  <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register(
+    "{{ url_for('static', filename='admin/sw.js') }}"
+  );
+}
+</script>
+
+
+
+</body>
+</html>
