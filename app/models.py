@@ -22,14 +22,27 @@ class News(db.Model):
     is_featured = db.Column(db.Boolean, default=False)
     image_file = db.Column(db.String(255))
 
+    bookmarks = db.relationship(
+        "Bookmark",
+        backref="news",
+        cascade="all, delete-orphan",
+        passive_deletes=True
+        )
+
 
 class Bookmark(db.Model):
     __tablename__ = 'bookmarks'  # تأكد من الاسم مطابق للجدول
     id = db.Column(db.Integer, primary_key=True)
-    news_id = db.Column(db.Integer, db.ForeignKey('news.id'), nullable=False)
+    
+    news_id = db.Column(
+    db.Integer,
+    db.ForeignKey("news.id", ondelete="CASCADE"),
+    nullable=False
+    )
+
     created_at = db.Column(db.DateTime, default=db.func.now())
 
-    news = db.relationship('News', backref='bookmarked')
+    # news = db.relationship('News', backref='bookmarked')
 
 
 class BreakingNews(db.Model):
