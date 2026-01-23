@@ -9,6 +9,8 @@ import re
 from flask_mail import Message
 from app import mail
 
+from cloudinary.uploader import upload
+
 from flask import jsonify
 from datetime import datetime
 
@@ -149,20 +151,14 @@ def news_form(id=None):
         category = request.form.get("category")
         content = request.form.get("content")
         image_url = request.form.get("image_url")
+        
+        image_url = request.form.get("image_url")
         image_file = request.files.get("image_file")
-        image_filename = None
 
         if image_file and image_file.filename != "":
-            if not allowed_file(image_file.filename):
-                flash("❌ نوع الصورة غير مدعوم", "error")
-                return redirect(request.url)
+            result = upload(image_file)
+            image_url = result["secure_url"]
 
-            filename = secure_filename(image_file.filename)
-            name, ext = os.path.splitext(filename)
-            filename = f"{name}_{int(datetime.now().timestamp())}{ext}"
-
-            image_file.save(os.path.join(UPLOAD_FOLDER, filename))
-            image_filename = filename
 
         is_featured = True if request.form.get("is_featured") == "on" else False
 
@@ -188,7 +184,7 @@ def news_form(id=None):
             news.image_url = image_url
             news.is_featured = is_featured
             news.image_url = image_url
-            news.image_file = image_filename if image_filename else news.image_file
+            # news.image_file = image_filename if image_filename else news.image_file
 
         else:
             news = News(
@@ -198,7 +194,7 @@ def news_form(id=None):
                 category=category,
                 content=content,
                 image_url=image_url,
-                image_file=image_filename,
+                # image_file=image_filename,
                 is_featured=is_featured
             )
             db.session.add(news)
