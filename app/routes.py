@@ -28,6 +28,10 @@ main = Blueprint(
 
 @main.route("/login", methods=["GET", "POST"])
 def login():
+
+    # 🧹 تنظيف أي رسائل flash قديمة
+    session.pop('_flashes', None)
+
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
