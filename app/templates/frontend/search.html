@@ -175,10 +175,16 @@
   <header class="main-header">
     <div class="container header-content">
       <div class="logo">
-        <span class="g">s</span><span class="y">l</span><span class="r">s</span>lkennews
+        <a href="{{ url_for('public.index') }}">
+          <img src="{{ url_for('static', filename='frontend/img/logo.png') }}" alt="Al-Qamishli News">
+        </a>
       </div>
 
       <nav class="main-nav" id="mainNav">
+        <div class="mobile-menu-header">
+          <span>القائمة</span>
+          <button class="close-menu" id="closeMenu">✕</button>
+        </div>
         <a href="{{ url_for('public.index') }}">الرئيسية</a>
         <a href="{{ url_for('public.category', category='سياسة') }}">سياسة</a>
         <a href="{{ url_for('public.category', category='رياضة') }}">رياضة</a>
@@ -281,6 +287,15 @@
   });
 
 
+</script>
+
+<script>
+  const closeMenu = document.getElementById("closeMenu");
+
+  closeMenu.onclick = () => {
+    nav.classList.remove("show");
+    menuOverlay.classList.remove("show");
+  };
 </script>
 
 </body>

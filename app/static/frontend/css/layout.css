@@ -14,14 +14,12 @@
   padding: 10px 0;
 }
 
-.logo {
-  font-size: 22px;
-  font-weight: bold;
+.logo img {
+  height: 40px;
+  width: auto;
+  display: block;
 }
 
-.logo .g { color: var(--green); }
-.logo .r { color: var(--red); }
-.logo .y { color: var(--yellow); }
 
 .main-nav {
   display: flex;
@@ -34,15 +32,24 @@
 
 .header-actions {
   display: flex;
-  gap: 10px;
+  align-items: center;   /* 🔑 الحل */
+  gap: 12px;
 }
 
-.icon-btn, .menu-btn {
+
+.icon-btn,
+.menu-btn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
   background: none;
   font-size: 20px;
   cursor: pointer;
 }
+
 
 .menu-btn {
   display: none;
