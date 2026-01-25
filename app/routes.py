@@ -6,11 +6,10 @@ from werkzeug.utils import secure_filename
 from app.models import Admin, News, BreakingNews, ContactMessage
 from app import db
 import re
-# from flask_mail import Message
-# from app import mail
-
-from app.email_service import send_email
-
+from flask_mail import Message
+from app import mail
+from threading import Thread
+from flask import current_app
 
 from cloudinary.uploader import upload
 
@@ -323,6 +322,15 @@ def contact_messages():
 
 # ------------------------------------------
 
+def send_async_email(app, msg):
+    with app.app_context():
+        try:
+            mail.send(msg)
+        except Exception as e:
+            print("Mail sending failed:", e)
+
+
+
 @main.route("/contact-messages/<int:id>/reply", methods=["GET", "POST"])
 def reply_message(id):
     if not session.get("admin_logged_in"):
@@ -330,12 +338,15 @@ def reply_message(id):
 
     message = ContactMessage.query.get_or_404(id)
 
+    
+
     email_to = message.email.strip()
     email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
 
     if not re.match(email_regex, email_to):
-        flash("❌ البريد الإلكتروني غير صالح", "error")
+        flash("❌ البريد الإلكتروني غير صالح، لا يمكن إرسال الرد", "error")
         return redirect(url_for("admin.contact_messages"))
+
 
     if request.method == "POST":
         reply_text = request.form.get("reply")
@@ -344,29 +355,37 @@ def reply_message(id):
             flash("❌ يجب كتابة الرد", "error")
             return redirect(request.url)
 
-        try:
-            send_email(
-                to=email_to,
-                subject="الرد على رسالتك - Al-Qamishli News",
-                html=f"""
-                <div style="font-family:Arial;direction:rtl">
-                    <h3>مرحبًا {message.name}</h3>
-                    <p>شكرًا لتواصلك معنا</p>
-                    <hr>
-                    <p>{reply_text}</p>
-                    <br>
-                    <p>مع التحية<br><b>فريق Al-Qamishli News</b></p>
-                </div>
+        # 📧 إنشاء البريد
+        email = Message(
+            subject="الرد على رسالتك - Al-Qamishli News",
+            recipients=[email_to],
+            body=f"""
+                مرحبًا {message.name},
+
+                شكرًا لتواصلك معنا.
+
+                ردنا على رسالتك:
+                -----------------------
+                {reply_text}
+
+                مع التحية،
+                فريق Al-Qamishli News
                 """
-            )
+                        )
 
-            message.is_read = True
-            db.session.commit()
-            flash("✅ تم إرسال الرد بنجاح", "success")
+        
 
-        except Exception as e:
-            print(e)
-            flash("❌ فشل إرسال البريد", "error")
+        if __name__ != "__main__":  # للتأكد أننا داخل Flask context
+            try:
+                # تشغيل الإرسال في Thread
+                Thread(target=send_async_email, args=(current_app._get_current_object(), email)).start()
+                message.is_read = True
+                db.session.commit()
+                flash("✅ تم إرسال الرد بنجاح", "success")
+            except Exception as e:
+                print("Async mail error:", e)
+                flash("❌ فشل إرسال البريد", "error")
+
 
         return redirect(url_for("admin.contact_messages"))
 
