@@ -8,9 +8,9 @@ from app import db
 import re
 from flask_mail import Message
 from app import mail
-from threading import Thread
+# from threading import Thread
 from flask import current_app
-
+from urllib.parse import quote
 from cloudinary.uploader import upload
 
 from flask import jsonify
@@ -322,12 +322,12 @@ def contact_messages():
 
 # ------------------------------------------
 
-def send_async_email(app, msg):
-    with app.app_context():
-        try:
-            mail.send(msg)
-        except Exception as e:
-            print("Mail sending failed:", e)
+# def send_async_email(app, msg):
+#     with app.app_context():
+#         try:
+#             mail.send(msg)
+#         except Exception as e:
+#             print("Mail sending failed:", e)
 
 
 
@@ -356,37 +356,25 @@ def reply_message(id):
             return redirect(request.url)
 
         # 📧 إنشاء البريد
-        email = Message(
-            subject="الرد على رسالتك - Al-Qamishli News",
-            recipients=[email_to],
-            body=f"""
-                مرحبًا {message.name},
+        subject = quote("الرد على رسالتك - slslkennews")
+        body = quote(f"""
+مرحبًا {message.name},
 
-                شكرًا لتواصلك معنا.
+شكرًا لتواصلك معنا.
 
-                ردنا على رسالتك:
-                -----------------------
-                {reply_text}
+ردنا:
+------------------
+{reply_text}
 
-                مع التحية،
-                فريق Al-Qamishli News
-                """
-                        )
+تحياتنا،
+فريق slslkennews
+""")
 
-        
+        gmail_url = f"https://mail.google.com/mail/?view=cm&fs=1&to={message.email}&su={subject}&body={body}"
 
-        if __name__ != "__main__":  # للتأكد أننا داخل Flask context
-            try:
-                # تشغيل الإرسال في Thread
-                Thread(target=send_async_email, args=(current_app._get_current_object(), email)).start()
-                message.is_read = True
-                db.session.commit()
-                flash("✅ تم إرسال الرد بنجاح", "success")
-            except Exception as e:
-                print("Async mail error:", e)
-                flash("❌ فشل إرسال البريد", "error")
+        message.is_read = True
+        db.session.commit()
 
-
-        return redirect(url_for("admin.contact_messages"))
+        return redirect(gmail_url)
 
     return render_template("reply-message.html", message=message)
