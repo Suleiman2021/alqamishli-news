@@ -55,15 +55,16 @@
   display: none;
 }
 
-.close-menu {
-  display: none ;
+.mobile-menu-header {
+  display: none;
+  
 }
 
 /* ===== Breaking ===== */
 .breaking-news {
   background: var(--red);
   color: #fff;
-  padding: 8px;
+  padding: 4px;
   text-align: center;
   font-weight: bold;
 }
