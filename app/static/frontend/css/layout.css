@@ -18,11 +18,18 @@
   height: 80px;
   width: auto;
   display: block;
+  transition: transform 0.25s ease; /* سلاسة */
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+  will-change: transform;
+  transform-origin: center;
 }
 
 .logo img:hover {
-  height: 83px;
+  transform: scale(1.05); /* تكبير بصري فقط */
+  
+
 }
+
 
 
 .main-nav {

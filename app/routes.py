@@ -6,8 +6,11 @@ from werkzeug.utils import secure_filename
 from app.models import Admin, News, BreakingNews, ContactMessage
 from app import db
 import re
-from flask_mail import Message
-from app import mail
+# from flask_mail import Message
+# from app import mail
+
+from app.email_service import send_email
+
 
 from cloudinary.uploader import upload
 
@@ -327,15 +330,12 @@ def reply_message(id):
 
     message = ContactMessage.query.get_or_404(id)
 
-    
-
     email_to = message.email.strip()
     email_regex = r'^[\w\.-]+@[\w\.-]+\.\w+$'
 
     if not re.match(email_regex, email_to):
-        flash("❌ البريد الإلكتروني غير صالح، لا يمكن إرسال الرد", "error")
+        flash("❌ البريد الإلكتروني غير صالح", "error")
         return redirect(url_for("admin.contact_messages"))
-
 
     if request.method == "POST":
         reply_text = request.form.get("reply")
@@ -344,30 +344,28 @@ def reply_message(id):
             flash("❌ يجب كتابة الرد", "error")
             return redirect(request.url)
 
-        # 📧 إنشاء البريد
-        email = Message(
-            subject="الرد على رسالتك - slslkennews",
-            recipients=[email_to],
-            body=f"""
-مرحبًا {message.name},
-
-شكرًا لتواصلك معنا.
-
-ردنا على رسالتك:
------------------------
-{reply_text}
-
-مع التحية،
-فريق slslkennews
-"""
-        )
-
         try:
-            mail.send(email)
+            send_email(
+                to=email_to,
+                subject="الرد على رسالتك - Al-Qamishli News",
+                html=f"""
+                <div style="font-family:Arial;direction:rtl">
+                    <h3>مرحبًا {message.name}</h3>
+                    <p>شكرًا لتواصلك معنا</p>
+                    <hr>
+                    <p>{reply_text}</p>
+                    <br>
+                    <p>مع التحية<br><b>فريق Al-Qamishli News</b></p>
+                </div>
+                """
+            )
+
             message.is_read = True
             db.session.commit()
             flash("✅ تم إرسال الرد بنجاح", "success")
+
         except Exception as e:
+            print(e)
             flash("❌ فشل إرسال البريد", "error")
 
         return redirect(url_for("admin.contact_messages"))
