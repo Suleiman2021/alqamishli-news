@@ -2,8 +2,24 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>من نحن - slslkennews</title>
+  <title>من نحن - Al-Qamishli News</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Al-Qamishli News">
+  <meta property="og:locale" content="ar_AR">
+
+  <meta name="theme-color" content="#1fa84f">
+
+  
+
+  <meta name="description" content="تعرف على موقع Al-Qamishli News، منصتنا الإخبارية العربية ورسالتنا الإعلامية.">
+
+  <meta property="og:title" content="من نحن | Al-Qamishli News">
+  <meta property="og:description" content="تعرف على موقع Al-Qamishli News ورسالتنا الإعلامية.">
+  <meta property="og:image" content="https://res.cloudinary.com/dmtrz2dgu/image/upload/v1769376313/logo_h6m3i2.png">
+  <meta property="og:url" content="{{ request.url }}">
+
 
   <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/base.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/layout.css') }}" />
@@ -110,7 +126,7 @@
     <div class="breaking-news">
       <div class="breaking-track">
         {% for n in breaking_news %}
-          <span class="breaking-item">🛑 {{ n.content }}</span>
+          <span class="breaking-item"> عاجل : {{ n.content }}</span>
         {% endfor %}
       </div>
     </div>

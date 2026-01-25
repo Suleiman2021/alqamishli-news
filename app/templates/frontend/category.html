@@ -2,8 +2,14 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>تصنيف الأخبار - slslkennews</title>
+  <title>تصنيف الأخبار - Al-Qamishli News</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Al-Qamishli News">
+  <meta property="og:locale" content="ar_AR">
+
+  <meta name="theme-color" content="#1fa84f">
 
   <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/base.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/layout.css') }}" />
@@ -180,7 +186,7 @@
     <div class="breaking-news">
       <div class="breaking-track">
         {% for n in breaking_news %}
-          <span class="breaking-item">🛑 {{ n.content }}</span>
+          <span class="breaking-item">عاجل : {{ n.content }}</span>
         {% endfor %}
       </div>
     </div>
@@ -215,7 +221,7 @@
   <!-- ===== Footer ===== -->
   <footer class="main-footer">
     <div class="container footer-content">
-      <div>© 2026 slslkennews - جميع الحقوق محفوظة</div>
+      <div>© 2026 Al-Qamishli News - جميع الحقوق محفوظة</div>
       <div class="footer-links">
         <a href="{{ url_for('public.about') }}">من نحن</a>
         <a href="{{ url_for('public.contact') }}">اتصل بنا</a>

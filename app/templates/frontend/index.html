@@ -2,15 +2,32 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>slslkennews</title>
+  <title>Al-Qamishli News</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Al-Qamishli News">
+  <meta property="og:locale" content="ar_AR">
+
+  <meta name="theme-color" content="#1fa84f">
+
+ <title>Al-Qamishli News | آخر الأخبار العربية</title>
+
+  <meta name="description" content="تابع آخر الأخبار السياسية والرياضية والتقنية لحظة بلحظة من Al-Qamishli News.">
+
+  <meta property="og:title" content="Al-Qamishli News | آخر الأخبار العربية">
+  <meta property="og:description" content="تابع آخر الأخبار السياسية والرياضية والتقنية لحظة بلحظة.">
+  <meta property="og:image" content="https://res.cloudinary.com/dmtrz2dgu/image/upload/v1769376313/logo_h6m3i2.png">
+  <meta property="og:url" content="{{ request.url }}">
+
+
 
   <!-- ربط CSS من مجلد static -->
   <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/base.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/layout.css') }}" />
   <link rel="stylesheet" href="{{ url_for('static', filename='frontend/css/responsive.css') }}" />
   <link rel="manifest" href="{{ url_for('static', filename='frontend/news/manifest.json') }}">
-  <meta name="theme-color" content="#1fa84f">
+  
 
 
   <style>
@@ -187,7 +204,7 @@
     <div class="breaking-news">
       <div class="breaking-track">
         {% for n in breaking_news %}
-          <span class="breaking-item">🛑 {{ n.content }}</span>
+          <span class="breaking-item">عاجل : {{ n.content }}</span>
         {% endfor %}
       </div>
     </div>
@@ -253,7 +270,7 @@
   <!-- ===== Footer ===== -->
   <footer class="main-footer">
     <div class="container footer-content">
-      <div>© 2026 slslkennews - جميع الحقوق محفوظة</div>
+      <div>© 2026 Al-Qamishli News - جميع الحقوق محفوظة</div>
       <div class="footer-links">
         <a href="{{ url_for('public.about') }}">من نحن</a>
         <a href="{{ url_for('public.contact') }}">اتصل بنا</a>
