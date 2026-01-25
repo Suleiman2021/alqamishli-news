@@ -44,6 +44,9 @@
   cursor: pointer;
 }
 
+.close-menu {
+  color: #fbc02d ;
+}
 
 /* ===== Mobile Menu Styling ===== */
 @media (max-width: 900px) {

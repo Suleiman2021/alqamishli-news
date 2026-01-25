@@ -15,7 +15,7 @@
 }
 
 .logo img {
-  height: 40px;
+  height: 80px;
   width: auto;
   display: block;
 }
@@ -53,6 +53,10 @@
 
 .menu-btn {
   display: none;
+}
+
+.close-menu {
+  display: none ;
 }
 
 /* ===== Breaking ===== */
