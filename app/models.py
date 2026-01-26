@@ -1,4 +1,6 @@
 from app import db
+from datetime import datetime
+
 
 class Admin(db.Model):
     __tablename__ = "admins"
@@ -63,3 +65,20 @@ class ContactMessage(db.Model):
     message = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.current_timestamp())
     is_read = db.Column(db.Boolean, default=False)
+
+
+
+class Visitor(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ip_address = db.Column(db.String(45), index=True)
+    visits_count = db.Column(db.Integer, default=1)
+    last_visit = db.Column(db.DateTime, default=datetime.utcnow)
+
+    pages = db.relationship("VisitedPage", backref="visitor", lazy=True)
+
+
+class VisitedPage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    visitor_id = db.Column(db.Integer, db.ForeignKey("visitor.id"))
+    path = db.Column(db.String(255))
+    visited_at = db.Column(db.DateTime, default=datetime.utcnow)

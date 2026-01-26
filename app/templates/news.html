@@ -74,6 +74,16 @@
       background: #333;
     }
 
+    .visitors-btn {
+      background: #1976d2;
+    }
+
+    .visitors-btn:hover {
+      background: #0d47a1;
+      transform: scale(1.05);
+    }
+
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -159,6 +169,10 @@
     <a class="btn" href="{{ url_for('admin.contact_messages') }}">
       📩 الرسائل الواردة
     </a>
+    <a class="btn visitors-btn" href="{{ url_for('admin.visitors') }}">
+      👥 بيانات الزوار
+    </a>
+
     <a class="btn settings-btn" href="{{ url_for('admin.settings') }}" style="background:#555;">
       ⚙️ الإعدادات
     </a>

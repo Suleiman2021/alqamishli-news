@@ -13,6 +13,9 @@ from flask import current_app
 from urllib.parse import quote
 from cloudinary.uploader import upload
 
+from app.models import Visitor
+
+
 from flask import jsonify
 from datetime import datetime
 
@@ -356,7 +359,7 @@ def reply_message(id):
             return redirect(request.url)
 
         # 📧 إنشاء البريد
-        subject = quote("الرد على رسالتك - slslkennews")
+        subject = quote("الرد على رسالتك - Al-Qamishli News")
         body = quote(f"""
 مرحبًا {message.name},
 
@@ -367,7 +370,7 @@ def reply_message(id):
 {reply_text}
 
 تحياتنا،
-فريق slslkennews
+فريق Al-Qamishli News
 """)
 
         gmail_url = f"https://mail.google.com/mail/?view=cm&fs=1&to={message.email}&su={subject}&body={body}"
@@ -378,3 +381,12 @@ def reply_message(id):
         return redirect(gmail_url)
 
     return render_template("reply-message.html", message=message)
+
+
+@main.route("/visitors")
+def visitors():
+    if not session.get("admin_logged_in"):
+        return redirect(url_for("admin.login"))
+
+    visitors = Visitor.query.order_by(Visitor.last_visit.desc()).all()
+    return render_template("visitors.html", visitors=visitors)

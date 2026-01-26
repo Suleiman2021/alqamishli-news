@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>لوحة الزوار</title>
+
+    <style>
+        body {
+            font-family: "Tajawal", sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #222;
+            margin-bottom: 30px;
+        }
+
+        .table-wrapper {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,.08);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #fff;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 15px;
+        }
+
+        tbody tr:hover {
+            background: #f9fafc;
+        }
+
+        .ip {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            background: #ecf0f1;
+            color: #333;
+        }
+
+        .pages {
+            text-align: right;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .pages span {
+            display: inline-block;
+            background: #eef2f7;
+            padding: 5px 10px;
+            border-radius: 15px;
+            margin: 2px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 30px;
+            color: #888;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            th, td {
+                font-size: 13px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>📊 سجل الزوار</h1>
+
+<div class="table-wrapper">
+
+{% if visitors %}
+<table>
+    <thead>
+        <tr>
+            <th>IP</th>
+            <th>عدد الزيارات</th>
+            <th>آخر زيارة</th>
+            <th>الصفحات التي تمت زيارتها</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for visitor in visitors %}
+        <tr>
+            <td class="ip">{{ visitor.ip_address }}</td>
+            <td>
+                <span class="badge">{{ visitor.visits_count }}</span>
+            </td>
+            <td>{{ visitor.last_visit.strftime('%Y-%m-%d %H:%M') }}</td>
+            <td class="pages">
+                {% if visitor.pages %}
+                    {% for page in visitor.pages %}
+                        <span>{{ page.path }}</span>
+                    {% endfor %}
+                {% else %}
+                    <span>—</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="empty">
+    لا يوجد بيانات زوار حتى الآن
+</div>
+{% endif %}
+
+</div>
+
+</body>
+</html>
