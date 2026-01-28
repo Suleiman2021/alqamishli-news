@@ -13,7 +13,7 @@ from flask import current_app
 from urllib.parse import quote
 from cloudinary.uploader import upload
 
-from app.models import Visitor
+from app.models import Visitor, VisitedPage
 
 
 from flask import jsonify
@@ -390,3 +390,24 @@ def visitors():
 
     visitors = Visitor.query.order_by(Visitor.last_visit.desc()).all()
     return render_template("visitors.html", visitors=visitors)
+
+
+
+
+
+
+@main.route("/visitors/<int:id>/delete", methods=["POST"])
+def delete_visitor(id):
+    if not session.get("admin_logged_in"):
+        return redirect(url_for("admin.login"))
+
+    visitor = Visitor.query.get_or_404(id)
+
+    # حذف الصفحات المرتبطة بالزائر أولاً
+    VisitedPage.query.filter_by(visitor_id=visitor.id).delete()
+
+    db.session.delete(visitor)
+    db.session.commit()
+
+    flash("🗑️ تم حذف الزائر بنجاح", "success")
+    return redirect(url_for("admin.visitors"))
