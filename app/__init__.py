@@ -56,15 +56,22 @@ def create_app():
         # تجاهل الملفات الثابتة
         if request.path.startswith("/static"):
             return
+        
+        # تجاهل الأدمن
+        if request.path.startswith("/admin"):
+            return
 
         # تجاهل favicon و health checks
         if request.path in ["/favicon.ico"] or request.method == "HEAD":
             return
 
-        ip = request.headers.get(
-            "X-Forwarded-For",
-            request.remote_addr
-        )
+        forwarded_for = request.headers.get("X-Forwarded-For")
+
+        if forwarded_for:
+            ip = forwarded_for.split(",")[0].strip()
+        else:
+            ip = request.remote_addr
+
 
         path = request.path
 
