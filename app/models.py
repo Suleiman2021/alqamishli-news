@@ -71,6 +71,7 @@ class ContactMessage(db.Model):
 class Visitor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ip_address = db.Column(db.String(45), index=True)
+    country = db.Column(db.String(100))  # 🟢 الدولة
     visits_count = db.Column(db.Integer, default=1)
     last_visit = db.Column(db.DateTime, default=datetime.utcnow)
 

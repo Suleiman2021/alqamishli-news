@@ -8,6 +8,29 @@ db = SQLAlchemy()
 mail = Mail()
 
 
+def get_country_from_ip(ip):
+    try:
+        # تجاهل IP المحلي
+        if ip in ("127.0.0.1", "localhost"):
+            return "محلي"
+
+        response = requests.get(
+            f"http://ip-api.com/json/{ip}?fields=status,country",
+            timeout=3
+        )
+
+        data = response.json()
+
+        if data.get("status") == "success":
+            return data.get("country")
+
+    except Exception:
+        pass
+
+    return "غير معروف"
+
+
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -51,7 +74,13 @@ def create_app():
             visitor.visits_count += 1
             visitor.last_visit = datetime.utcnow()
         else:
-            visitor = Visitor(ip_address=ip)
+            country = get_country_from_ip(ip)
+
+            visitor = Visitor(
+                ip_address=ip,
+                country=country
+            )
+
             db.session.add(visitor)
             db.session.flush()  # للحصول على ID مباشرة
 
