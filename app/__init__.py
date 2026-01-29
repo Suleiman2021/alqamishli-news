@@ -4,9 +4,20 @@ from flask_mail import Mail
 from datetime import datetime
 from app.config import Config
 
+import geoip2.database
+import os
+
 db = SQLAlchemy()
 mail = Mail()
 
+
+
+
+# تحديد المسار للملف
+GEOIP_DB_PATH = os.path.join("app", "static", "dbip-country-lite-2026-01.mmdb")
+
+# إنشاء قارئ قاعدة البيانات
+geoip_reader = geoip2.database.Reader(GEOIP_DB_PATH)
 
 def get_country_from_ip(ip):
     try:
@@ -14,20 +25,12 @@ def get_country_from_ip(ip):
         if ip in ("127.0.0.1", "localhost"):
             return "محلي"
 
-        response = requests.get(
-            f"http://ip-api.com/json/{ip}?fields=status,country",
-            timeout=3
-        )
-
-        data = response.json()
-
-        if data.get("status") == "success":
-            return data.get("country")
+        response = geoip_reader.country(ip)
+        return response.country.name or "غير معروف"
 
     except Exception:
-        pass
+        return "غير معروف"
 
-    return "غير معروف"
 
 
 
