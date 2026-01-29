@@ -105,6 +105,70 @@
       border-radius: 20px;
       font-size: 14px;
     }
+
+
+    @media (max-width: 768px) {
+
+      table, thead, tbody, th, td, tr {
+        display: block;
+        width: 100%;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        background: #fff;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        padding: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      }
+
+      tr.unread {
+        border-right: 6px solid #ff9800;
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 8px 0;
+        border: none;
+        text-align: right;
+        font-size: 14px;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #555;
+        min-width: 90px;
+      }
+
+      .msg-preview {
+        max-width: 100%;
+        margin: 0;
+        font-size: 14px;
+      }
+
+      .btn-reply {
+        width: 100%;
+        text-align: center;
+      }
+
+      .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .counter {
+        align-self: flex-end;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -134,21 +198,21 @@
     <tbody>
       {% for m in messages %}
       <tr class="{% if not m.is_read %}unread{% endif %}">
-        <td>{{ m.id }}</td>
-        <td>{{ m.name }}</td>
-        <td>{{ m.email }}</td>
-        <td class="msg-preview">
+        <td data-label="ID">{{ m.id }}</td>
+        <td data-label="الاسم">{{ m.name }}</td>
+        <td data-label="البريد">{{ m.email }}</td>
+        <td data-label="الرسالة" class="msg-preview">
           {{ m.message[:120] }}{% if m.message|length > 120 %}...{% endif %}
         </td>
-        <td>{{ m.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
-        <td>
+        <td data-label="التاريخ">{{ m.created_at.strftime("%Y-%m-%d %H:%M") }}</td>
+        <td data-label="الحالة">
           {% if m.is_read %}
             <span class="badge-read">مقروء</span>
           {% else %}
             <span class="badge-new">جديد</span>
           {% endif %}
         </td>
-        <td>
+        <td data-label="رد">
           <a class="btn btn-reply" href="{{ url_for('admin.reply_message', id=m.id) }}">
             ✉️ رد
           </a>

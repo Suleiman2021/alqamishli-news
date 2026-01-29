@@ -2,20 +2,139 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تعديل من نحن</title>
+    <title>تعديل صفحة من نحن</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- TinyMCE المحلي -->
+    <script src="{{ url_for('static', filename='tinymce/tinymce.min.js') }}"></script>
+
+    <style>
+        body {
+            font-family: Tahoma, Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(15px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-save {
+            background: #1fa84f;
+            color: #fff;
+        }
+
+        .btn-save:hover {
+            background: #14843d;
+            transform: scale(1.05);
+        }
+
+        .btn-back {
+            background: #555;
+            color: #fff;
+        }
+
+        .btn-back:hover {
+            background: #333;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<h2>✏️ تعديل صفحة من نحن</h2>
+<div class="container">
 
-<form method="POST">
-    <textarea name="content" rows="15" style="width:100%">
-        {{ about.content if about else "" }}
-    </textarea>
+    <h2>✏️ تعديل صفحة من نحن</h2>
 
-    <br><br>
-    <button type="submit">💾 حفظ</button>
-</form>
+    <form method="POST">
+
+        <textarea name="content" id="editor">
+{{ about.content if about else "" }}
+        </textarea>
+
+        <div class="actions">
+            <button type="submit" class="btn btn-save">💾 حفظ التعديلات</button>
+
+            <a href="{{ url_for('admin.news_list') }}" class="btn btn-back">
+                ⬅️ رجوع
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+tinymce.init({
+    selector: '#editor',
+    height: 500,
+    language: 'ar',
+    directionality: 'rtl',
+    menubar: false,
+    plugins: [
+        'advlist autolink lists link image charmap preview anchor',
+        'searchreplace visualblocks code fullscreen',
+        'insertdatetime media table help wordcount'
+    ],
+    toolbar:
+        'undo redo | bold italic underline | ' +
+        'alignright aligncenter alignleft | ' +
+        'bullist numlist | link image | ' +
+        'removeformat preview code fullscreen',
+    content_style:
+        'body { font-family: Tahoma, Arial; font-size: 16px; line-height: 1.8; }'
+});
+</script>
 
 </body>
 </html>
