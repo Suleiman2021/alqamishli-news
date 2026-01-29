@@ -83,3 +83,12 @@ class VisitedPage(db.Model):
     visitor_id = db.Column(db.Integer, db.ForeignKey("visitor.id"))
     path = db.Column(db.String(255))
     visited_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+
+
+
+class About(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

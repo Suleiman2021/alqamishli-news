@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from app.models import Admin, News, BreakingNews, ContactMessage
+from app.models import About
 from app import db
 import re
 from flask_mail import Message
@@ -411,3 +412,31 @@ def delete_visitor(id):
 
     flash("🗑️ تم حذف الزائر بنجاح", "success")
     return redirect(url_for("admin.visitors"))
+
+
+
+@main.route("/about", methods=["GET", "POST"])
+def edit_about():
+    if not session.get("admin_logged_in"):
+        return redirect(url_for("admin.login"))
+
+    about = About.query.first()
+
+    if request.method == "POST":
+        content = request.form.get("content")
+
+        if not content:
+            flash("❌ محتوى من نحن مطلوب", "error")
+            return redirect(url_for("admin.edit_about"))
+
+        if about:
+            about.content = content
+        else:
+            about = About(content=content)
+            db.session.add(about)
+
+        db.session.commit()
+        flash("✅ تم حفظ صفحة من نحن بنجاح", "success")
+        return redirect(url_for("admin.edit_about"))
+
+    return render_template("about-form.html", about=about)

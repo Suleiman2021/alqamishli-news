@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تعديل من نحن</title>
+</head>
+<body>
+
+<h2>✏️ تعديل صفحة من نحن</h2>
+
+<form method="POST">
+    <textarea name="content" rows="15" style="width:100%">
+        {{ about.content if about else "" }}
+    </textarea>
+
+    <br><br>
+    <button type="submit">💾 حفظ</button>
+</form>
+
+</body>
+</html>

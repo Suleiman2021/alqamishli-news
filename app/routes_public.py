@@ -1,6 +1,7 @@
 # app/routes_public.py
 from flask import render_template, request, redirect, url_for, flash
 from app.models import ContactMessage, BreakingNews
+from app.models import About
 from app import db
 from flask import Blueprint, render_template, request
 from app.models import News
@@ -135,6 +136,8 @@ def search():
 # ======================
 # من نحن
 # ======================
+
+
 @public.route("/about")
 def about():
     breaking_news = (
@@ -142,8 +145,15 @@ def about():
         .filter_by(is_active=True)
         .order_by(BreakingNews.created_at.desc())
         .all()
-    )    
-    return render_template("frontend/about.html",breaking_news=breaking_news)
+    )
+
+    about = About.query.first()
+
+    return render_template(
+        "frontend/about.html",
+        about=about,
+        breaking_news=breaking_news
+    )
 
 
 # ======================
