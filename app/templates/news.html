@@ -1,186 +1,186 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>الأخبار المنشورة - Admin</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: Tahoma, Arial, sans-serif;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-      background: #f5f5f5;
-      color: #222;
-      overflow-x: hidden;
-    }
+<meta charset="UTF-8">
+<title>الأخبار المنشورة - Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    header {
-      background: #1fa84f;
-      color: #fff;
-      padding: 15px 20px;
-      font-size: 22px;
-      font-weight: bold;
-    }
+<style>
+:root {
+  --main:#1fa84f;
+  --danger:#e53935;
+  --warning:#fbc02d;
+  --info:#1976d2;
+  --dark:#333;
+}
 
-    .container {
-      width: 95%;
-      max-width: 1200px;
-      margin: 20px auto;
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      animation: fadeIn 0.5s ease;
-      box-sizing: border-box;
-    }
+body {
+  margin:0;
+  font-family: Tahoma, Arial, sans-serif;
+  background:#f4f6f8;
+  color:#222;
+}
 
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(20px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
+header {
+  background:var(--main);
+  color:#fff;
+  padding:16px;
+  font-size:22px;
+}
 
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
+.container {
+  max-width:1200px;
+  margin:20px auto;
+  padding:15px;
+  background:#fff;
+  border-radius:10px;
+  box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
 
-    .top-bar h1 {
-      font-size: 24px;
-    }
+/* ===== Top Bar ===== */
+.top-bar {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
 
-    .btn {
-      padding: 8px 15px;
-      background: #1fa84f;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
+.top-bar h1 {
+  font-size:22px;
+  margin:0;
+}
 
-    .btn:hover {
-      background: #13803a;
-      transform: scale(1.05);
-    }
+.actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  width: 100%;
+}
 
-    .settings-btn {
-     background: #555;
-    }
+.btn {
+  padding:10px 14px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+  font-size:14px;
+  text-decoration:none;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  transition:.2s;
+}
 
-    .settings-btn:hover {
-      background: #333;
-    }
+.btn:hover {opacity:.9; transform:translateY(-1px)}
 
-    .visitors-btn {
-      background: #1976d2;
-    }
+.btn-main {background:var(--main)}
+.btn-info {background:var(--info)}
+.btn-dark {background:#555}
+.btn-warning {background:var(--warning)}
+.btn-danger {background:var(--danger)}
 
-    .visitors-btn:hover {
-      background: #0d47a1;
-      transform: scale(1.05);
-    }
+/* ===== Table ===== */
+table {
+  width:100%;
+  border-collapse:collapse;
+}
 
+th {
+  background:#f1f1f1;
+  padding:12px;
+  font-size:14px;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
+td {
+  padding:12px;
+  border-bottom:1px solid #eee;
+  font-size:14px;
+}
 
-    th, td {
-      padding: 10px;
-      text-align: right;
-      border-bottom: 1px solid #eee;
-    }
+.actions-cell {
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+}
 
-    th {
-      background: #f0f0f0;
-      font-weight: bold;
-    }
+/* ===== Mobile Cards ===== */
+@media(max-width:768px) {
 
-    td button {
-      margin-left: 5px;
-      padding: 5px 10px;
-      border-radius: 4px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
+  table, thead, tbody, th, tr {
+    display:block;
+  }
 
-    .edit-btn {
-      background: #fbc02d;
-      color: #fff;
-    }
+  thead {
+    display:none;
+  }
 
-    .edit-btn:hover {
-      background: #d4a017;
-      transform: scale(1.1);
-    }
+  tr {
+    background:#fff;
+    margin-bottom:12px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.06);
+    padding:10px;
+  }
 
-    .delete-btn {
-      background: #e53935;
-      color: #fff;
-      margin-right: 0.5rem;
-      margin-left: 0.5rem;
-    }
+  td {
+    display:flex;
+    justify-content:space-between;
+    padding:8px;
+    border:none;
+    font-size:13px;
+  }
 
-    .delete-btn:hover {
-      background: #b71c1c;
-      transform: scale(1.1);
-    }
+  td::before {
+    content:attr(data-label);
+    font-weight:bold;
+    color:#555;
+  }
 
-    /* Responsive */
-    @media (max-width: 800px) {
-      th, td {
-        font-size: 14px;
-        padding: 8px;
-      }
+  .actions-cell {
+    justify-content:flex-start;
+  }
 
-      .top-bar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
+  .btn {
+    width:100%;
+    justify-content:center;
+  }
+}
 
-      .btn {
-        width: 100%;
-        font-size: 14px;
-      }
-    }
-  </style>
+@media (max-width: 600px) {
+  .top-bar h1 {
+    font-size: 20px;
+  }
+
+  .btn {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+</style>
 </head>
+
 <body>
 
-<header>لوحة إدارة الأخبار - Admin</header>
+<header>لوحة إدارة الأخبار</header>
 
 <div class="container">
+
   <div class="top-bar">
-  <h1>الأخبار المنشورة</h1>
+    <h1>الأخبار المنشورة</h1>
 
-  <div style="display:flex; gap:10px;">
-    <a class="btn" href="{{ url_for('admin.news_form') }}">➕ إضافة خبر</a>
-    <a class="btn" href="{{ url_for('admin.breaking_news') }}">
-      🛑 الأخبار العاجلة
-    </a>
-
-    <a class="btn" href="{{ url_for('admin.contact_messages') }}">
-      📩 الرسائل الواردة
-    </a>
-    <a class="btn visitors-btn" href="{{ url_for('admin.visitors') }}">
-      👥 بيانات الزوار
-    </a>
-
-    <a class="btn settings-btn" href="{{ url_for('admin.settings') }}" style="background:#555;">
-      ⚙️ الإعدادات
-    </a>
+    <div class="actions">
+      <a class="btn btn-main" href="{{ url_for('admin.news_form') }}">➕ إضافة خبر</a>
+      <a class="btn btn-warning" href="{{ url_for('admin.breaking_news') }}">الأخبار العاجلة</a>
+      <a class="btn btn-message" href="{{ url_for('admin.contact_messages') }}">📩 الرسائل الواردة</a>
+      <a class="btn btn-info" href="{{ url_for('admin.visitors') }}">👥 الزوار</a>
+      <a class="btn btn-dark" href="{{ url_for('admin.settings') }}">⚙️ الإعدادات</a>
+      <a class="btn btn-dark" href="{{ url_for('admin.edit_about') }}">📝 تعديل About</a>
+    </div>
   </div>
-</div>
 
-
-  <table id="newsTable">
+  <table>
     <thead>
       <tr>
         <th>العنوان</th>
@@ -189,31 +189,51 @@
         <th>إجراءات</th>
       </tr>
     </thead>
+
     <tbody>
-      {% if news_list %}
-        {% for news in news_list %}
-          <tr>
-            <td>{{ news.title }}</td>
-            <td>{{ news.category }}</td>
-            <td>{{ news.created_at.strftime('%Y-%m-%d') }}</td>
-            <td>
-              <a href="{{ url_for('admin.news_form', id=news.id) }}">
-                <button class="edit-btn">تعديل</button>
-              </a>
-              <form method="POST" action="{{ url_for('admin.delete_news', id=news.id) }}" style="display:inline;">
-                <button class="delete-btn" onclick="return confirm('هل أنت متأكد من حذف هذا الخبر؟')">حذف</button>
-              </form>
-            </td>
-          </tr>
-        {% endfor %}
-      {% else %}
-        <tr>
-          <td colspan="4" style="text-align:center;">لا توجد أخبار منشورة بعد</td>
-        </tr>
-      {% endif %}
+    {% if news_list %}
+      {% for news in news_list %}
+      <tr>
+        <td data-label="العنوان">{{ news.title }}</td>
+        <td data-label="الفئة">{{ news.category }}</td>
+        <td data-label="التاريخ">{{ news.created_at.strftime('%Y-%m-%d') }}</td>
+        <td data-label="إجراءات">
+          <div class="actions-cell">
+            <a class="btn btn-warning" href="{{ url_for('admin.news_form', id=news.id) }}">✏️ تعديل</a>
+            <form method="POST" action="{{ url_for('admin.delete_news', id=news.id) }}">
+              <button class="btn btn-danger"
+                onclick="return confirm('هل أنت متأكد من الحذف؟')">
+                🗑 حذف
+              </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    {% else %}
+      <tr>
+        <td colspan="4" style="text-align:center;">لا توجد أخبار منشورة</td>
+      </tr>
+    {% endif %}
     </tbody>
   </table>
+
 </div>
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
