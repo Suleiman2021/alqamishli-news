@@ -16,6 +16,10 @@
             padding: 20px;
         }
 
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         .container {
             max-width: 1000px;
             margin: auto;
@@ -81,10 +85,12 @@
         @media (max-width: 768px) {
             .actions {
                 flex-direction: column;
+                width: 100%;
             }
 
             .btn {
                 width: 100%;
+                max-width: 100%;
             }
         }
     </style>
@@ -108,6 +114,7 @@
             <a href="{{ url_for('admin.news_list') }}" class="btn btn-back">
                 ⬅️ رجوع
             </a>
+
         </div>
 
     </form>

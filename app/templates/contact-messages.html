@@ -85,11 +85,13 @@
     }
 
     .msg-preview {
-      max-width: 400px;
-      text-align: right;
-      margin: auto;
-      color: #333;
+      max-width: 100%;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      white-space: normal;
+      line-height: 1.6;
     }
+
 
     .top-bar {
       display: flex;
@@ -109,7 +111,7 @@
 
     @media (max-width: 768px) {
 
-      table, thead, tbody, th, td, tr {
+      table, thead, tbody, tr {
         display: block;
         width: 100%;
       }
@@ -121,20 +123,18 @@
       tr {
         background: #fff;
         margin-bottom: 15px;
-        border-radius: 10px;
-        padding: 12px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        border-radius: 12px;
+        padding: 14px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
       }
 
       tr.unread {
-        border-right: 6px solid #ff9800;
+        border-right: 5px solid #ff9800;
       }
 
       td {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding: 8px 0;
+        display: block;
+        padding: 6px 0;
         border: none;
         text-align: right;
         font-size: 14px;
@@ -142,20 +142,22 @@
 
       td::before {
         content: attr(data-label);
+        display: block;
         font-weight: bold;
         color: #555;
-        min-width: 90px;
+        margin-bottom: 4px;
+        font-size: 13px;
       }
 
       .msg-preview {
-        max-width: 100%;
-        margin: 0;
         font-size: 14px;
+        color: #333;
       }
 
       .btn-reply {
         width: 100%;
         text-align: center;
+        margin-top: 8px;
       }
 
       .top-bar {
@@ -168,6 +170,7 @@
         align-self: flex-end;
       }
     }
+
 
   </style>
 </head>
